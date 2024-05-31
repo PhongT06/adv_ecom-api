@@ -1,0 +1,190 @@
+swagger: '2.0'
+info:
+  title: 'E-Commerce API'
+  description: 'An API to manage E-Commerce'
+  version: '1.0.0'
+host: '127.0.0.1:8888'
+schemes:
+  - 'http'
+consumes: 
+  - 'application/json'
+produces:
+  - 'application/json'
+paths: 
+  /token/:
+    post:
+      summary: "Token Endpoint"
+      description: "Endpoint for user authentication"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Credentials for login"
+          required: true
+          schema:
+            $ref: "#/definitions/TokenCredentials"
+      responses:
+        200:
+          description: "Login Successful"
+          schema:
+            $ref: "#/definitions/TokenResponse"
+          examples:
+            application/json:
+              status: "success"
+              messsage: "You have successfully authenticated yourself"
+              token: "eyJhbGciJkeMAK1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTY1Njk1ODUsImaJmMTcxNjU2NTk4NSwic3ViIjoxfQ.qcNLua5V9JHGNdkemandKdkWEUvgSWeuQBR2EMNl7Jo"
+        401:
+          description: "Unsuccessful login"
+          schema:
+            $ref: "#/definitions/TokenResponse"
+          examples:
+            application/json:
+              status: "error"
+              message: "Username and/or password is incorrect"
+  /orders/:
+    post:
+      summary: "Create Order Endpoint"
+      description: "Creates a new order for the authenticated user"
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Order object"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              products:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                      example: 1
+                  required:
+                    - id
+            required:
+              - products
+      responses:
+        201:
+          description: "Order Created"
+        400:
+          description: "Invalid Input"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UnauthorizedError"
+  /customers/ :
+    get:
+      summary: "Get all customers"
+      description: "Retrieve a list of all customers"
+      parameters:
+        - in: query
+          name: page
+          type: "integer"
+          description: "Page of the customers"
+          required: false
+        - in: query
+          name: per_page
+          type: "integer"
+          description: "Number of customers per page"
+          required: false
+      responses:
+        200:
+          description: 'Successful Response'
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CustomerResponse"
+    post:
+      summary: "Create a new customer"
+      description: "Will add a new customer to the database"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User create object"
+          required: true
+          schema:
+            $ref: "#/definitions/CustomerRequest"
+      responses:
+        201:
+          description: 'Customer Created'
+          schema:
+            $ref: "#/definitions/CustomerResponse"
+definitions: 
+  TokenCredentials:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        description: "The username of the user"
+      password:
+        type: "string"
+        format: "password"
+        description: "The password associated with username"
+    required:
+      - "username"
+      - "password"
+  TokenResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "Status of the operation"
+      message:
+        type: "string"
+        description: "Message indicating the success or failure"
+      token:
+        type: "string"
+        description: "Authenticated token"
+  UnauthorizedError:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+        description: "The description of the error"
+        example: "Invalid token. Please try again"
+  Customer:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Customer's full name"
+        example: "Michael Jordan"
+      email:
+        type: "string"
+        description: "Customer's email address"
+        example: "mj@bulls.com"
+      phone:
+        type: "string"
+        description: "Customer's phone number"
+        example: "(555) 555-4321"
+      username:
+        type: "string"
+        description: "Customer's username"
+        example: "jumpman23"
+  CustomerResponse:
+    allOf:
+      - $ref: '#/definitions/Customer'
+      - type:
+        properties:
+          id:
+            type: "integer"
+            description: "Customer's unique ID"
+            readonly: true
+            example: 23
+  CustomerRequest:
+    allOf:
+      - $ref: "#/definitions/Customer"
+      - type:
+        properties:
+          password:
+            type: "string"
+            description: "Customer's password"
+            example: "6rings!"
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
