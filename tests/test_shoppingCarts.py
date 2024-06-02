@@ -33,4 +33,4 @@ class TestShoppingCartEndpoint(unittest.TestCase):
             }
         
         response = self.app.get(f'/shopping-cart/{mock_cart.id}', json=payload)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
