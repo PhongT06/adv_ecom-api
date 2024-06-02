@@ -10,7 +10,8 @@ from models.customer import Customer
 from models.product import Product
 from models.order import Order
 from models.orderProduct import order_product
-from models.role import Role
+# from models.role import Role
+from models.shoppingCart import ShoppingCart
 
 from routes.customerBP import customer_blueprint
 from routes.productBP import product_blueprint
