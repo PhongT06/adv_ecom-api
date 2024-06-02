@@ -17,6 +17,3 @@ class Customer(Base):
     def __repr__(self):
         return f"<Customer {self.id}|{self.name}>"
 
-
-    # One-to-One: Customer and CustomerAccount
-    # customer_account: Mapped['CustomerAccount'] = db.relationship(back_populates='customer')

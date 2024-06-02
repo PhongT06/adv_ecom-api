@@ -17,7 +17,6 @@ def save():
         return jsonify({"error": str(err)}), 400
 
 
-
 # @cache.cached(timeout=60)
 def find_all():
     args = request.args

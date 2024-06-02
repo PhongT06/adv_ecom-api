@@ -56,6 +56,8 @@ def config_rate_limit():
     limiter.limit("100 per hour")(customer_blueprint)
     limiter.limit("100 per hour")(product_blueprint)
     limiter.limit("100 per hour")(order_blueprint)
+    limiter.limit("100 per hour")(shopping_cart_blueprint)
+    limiter.limit("100 per hour")(token_blueprint)
 
 if __name__ == "__main__":
     app = create_app('DevelopmentConfig')

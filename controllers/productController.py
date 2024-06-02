@@ -36,7 +36,7 @@ def find_by_id(product_id):
     else:
         return jsonify({'error': 'Product not found'}), 404
 
-@token_auth.login_required(role="admin")
+@token_auth.login_required
 def update(product_id):
     try:
         product_data = product_schema.load(request.json, partial=True)
@@ -48,7 +48,7 @@ def update(product_id):
     except ValidationError as err:
         return jsonify(err.messages), 400
 
-@token_auth.login_required(role="admin")
+@token_auth.login_required
 def delete(product_id):
     deleted = productService.delete(product_id)
     if deleted:
