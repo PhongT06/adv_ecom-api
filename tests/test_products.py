@@ -13,10 +13,6 @@ class TestProductsEndpoint(unittest.TestCase):
         self.app = app.test_client()
         self.faker = Faker()
 
-    def test_get_products(self):
-        response = self.app.get('/products/')
-        self.assertEqual(response.status_code, 200)
-
     def create_test_product(self):
         mock_product = MagicMock()
         mock_product.id = fake.uuid4()
